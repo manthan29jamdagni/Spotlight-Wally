@@ -23,14 +23,16 @@ namespace WindowsFormsApplication1
             textBox_loc.Enabled = false;
             textBox_loc.Text = "Default location";
             browse_button.Enabled = false;
-            
             logHandler.Text = "============LOGS============\n";
             logHandler.Text += ">Default Location = D://Spotlight_Wallpapers\n\n";
             logHandler.Text += ">WARNING-All Files will be removed from the selected directory\n\n";
 
             button_wpsetter.Enabled = false;
- 
-            
+            if (!Directory.Exists(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
+
         }
 
         private void LoadNextImage(string currentDir)
@@ -63,6 +65,7 @@ namespace WindowsFormsApplication1
             FileInfo[] files = d.GetFiles();
             foreach (FileInfo file in files)
             {
+               
                 if (File.Exists(file.FullName + ".jpg"))
                 {
                     File.Delete(file.FullName);
@@ -89,7 +92,17 @@ namespace WindowsFormsApplication1
         private void RenameFiles(string currentDir)
         {
             DirectoryInfo d = new DirectoryInfo(currentDir);
+
             FileInfo[] files = d.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                if (file.Length < 409600)
+                {
+                    file.Delete();
+                }
+            }
+
+            files = d.GetFiles();
             int count = 0;
             string newname = "";
             foreach (FileInfo file in files)
@@ -195,10 +208,5 @@ namespace WindowsFormsApplication1
         {
 
         }
-
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
     }
-}
+    }
